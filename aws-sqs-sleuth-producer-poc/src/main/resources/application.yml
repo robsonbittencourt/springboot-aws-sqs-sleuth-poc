@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: aws-sqs-sleuth-producer-poc
+
+app:
+  queue:
+    name: ${QUEUE_NAME}
