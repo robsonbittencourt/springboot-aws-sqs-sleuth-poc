@@ -11,21 +11,12 @@ after_success:
   - if [[ "$TRAVIS_BRANCH" == "master" ]]; then
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" ;
 
-    export VERSION=`./aws-sqs-sleuth-producer-poc/gradlew properties -q | grep "appVersion:" | awk '{print $2}'`
-
-    docker build -t robsonbittencourt/aws-sqs-sleuth-producer-poc:latest -t robsonbittencourt/aws-sqs-sleuth-producer-poc:${VERSION} . ;
-
+    docker build -t robsonbittencourt/aws-sqs-sleuth-producer-poc:latest ./aws-sqs-sleuth-producer-poc ;
     docker push docker.io/robsonbittencourt/aws-sqs-sleuth-producer-poc:latest ;
 
-    docker push docker.io/robsonbittencourt/aws-sqs-sleuth-producer-poc:${VERSION} ;
-
-    export VERSION=`./aws-sqs-sleuth-consumer-poc/gradlew properties -q | grep "appVersion:" | awk '{print $2}'`
-
-    docker build -t robsonbittencourt/aws-sqs-sleuth-consumer-poc:latest -t robsonbittencourt/aws-sqs-sleuth-consumer-poc:${VERSION} . ;
-
+    docker build -t robsonbittencourt/aws-sqs-sleuth-consumer-poc:latest ./aws-sqs-sleuth-consumer-poc ;
     docker push docker.io/robsonbittencourt/aws-sqs-sleuth-consumer-poc:latest ;
 
-    docker push docker.io/robsonbittencourt/aws-sqs-sleuth-consumer-poc:${VERSION} ;
     fi
 
 before_cache:

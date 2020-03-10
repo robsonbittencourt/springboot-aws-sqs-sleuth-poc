@@ -10,10 +10,6 @@ repositories {
 	mavenCentral()
 }
 
-ext {
-	appVersion="1.0.0"
-}
-
 dependencies {
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.2.5.RELEASE'
 
