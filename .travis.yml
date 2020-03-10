@@ -1,0 +1,38 @@
+language: java
+
+jdk:
+  - openjdk11
+
+script:
+  - ./aws-sqs-sleuth-producer-poc/gradlew clean build -p aws-sqs-sleuth-producer-poc
+  - ./aws-sqs-sleuth-consumer-poc/gradlew clean build -p aws-sqs-sleuth-consumer-poc
+
+after_success:
+  - if [[ "$TRAVIS_BRANCH" == "master" ]]; then
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" ;
+
+    export VERSION=`./aws-sqs-sleuth-producer-poc/gradlew properties -q | grep "appVersion:" | awk '{print $2}'`
+
+    docker build -t robsonbittencourt/aws-sqs-sleuth-producer-poc:latest -t robsonbittencourt/aws-sqs-sleuth-producer-poc:${VERSION} . ;
+
+    docker push docker.io/robsonbittencourt/aws-sqs-sleuth-producer-poc:latest ;
+
+    docker push docker.io/robsonbittencourt/aws-sqs-sleuth-producer-poc:${VERSION} ;
+
+    export VERSION=`./aws-sqs-sleuth-consumer-poc/gradlew properties -q | grep "appVersion:" | awk '{print $2}'`
+
+    docker build -t robsonbittencourt/aws-sqs-sleuth-consumer-poc:latest -t robsonbittencourt/aws-sqs-sleuth-consumer-poc:${VERSION} . ;
+
+    docker push docker.io/robsonbittencourt/aws-sqs-sleuth-consumer-poc:latest ;
+
+    docker push docker.io/robsonbittencourt/aws-sqs-sleuth-consumer-poc:${VERSION} ;
+    fi
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
