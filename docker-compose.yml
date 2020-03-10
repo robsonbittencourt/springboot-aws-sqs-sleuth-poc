@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+
+  consumer:
+    image: robsonbittencourt/aws-sqs-sleuth-consumer-poc
+    environment:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_REGION
+      - QUEUE_NAME
+
+  producer:
+    image: robsonbittencourt/aws-sqs-sleuth-producer-poc
+    ports: 
+      - "8080:8080"
+    environment:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_REGION
+      - QUEUE_NAME
